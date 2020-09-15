@@ -5,13 +5,34 @@ import Box from './Box';
 class App extends Component {
   state = {
     boxes: [
-      { key: '1', title: "box one", zIndex: 3},
-      { key: '2', title: "box two", zIndex: 2 },
-      { key: '3', title: "box three", zIndex: 1 }
+      { key: 'a', title: "box one", zIndex: 3},
+      { key: 'b', title: "box two", zIndex: 2 },
+      { key: 'c', title: "box three", zIndex: 1}
     ],
     showClicked: false,
     width:  300,
     height: 300,
+  }
+
+  editZindex =  (object) => {
+    // console.log(object, "key")
+    let boxes = [...this.state.boxes]
+    // console.log(boxes, " boxes")
+    console.log(boxes, ".////////////////////////")
+    const maxZindex = Math.max.apply(Math, boxes.map(function (box) { return box.zIndex; }))
+    let clickedItem = boxes.find((box) => box.key === object.id );
+    // let objectWithMaxZindex = boxes.find((box) => box.zIndex === maxZindex);
+    // console.log(maxZindex);
+    // console.log(objectWithMaxZindex)
+    // objectWithMaxZindex.zIndex = object.zIndex;
+    clickedItem.zIndex = maxZindex + 1;
+    console.log(boxes, ".////////////////////////")
+    this.setState({
+      boxes: boxes
+    })
+
+    
+
   }
 
 
@@ -19,10 +40,12 @@ class App extends Component {
     boxes.map((box) => {
       return <Box
                 key={box.key}
+                id={box.key}
                 title={box.title}
                 zIndex={box.zIndex}
                 width={this.state.width}
                 height={this.state.height}
+                editZindex={this.editZindex.bind(this)}
               />
     })
   )

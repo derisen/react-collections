@@ -42,7 +42,11 @@ class Box extends PureComponent {
       };
     
       onStart = () => {
-
+        let object =   {
+          id: this.props.id,
+          zIndex: this.props.zIndex
+        }
+        this.props.editZindex(object);
         this.setState({activeDrags: ++this.state.activeDrags});
       };
     
@@ -52,17 +56,18 @@ class Box extends PureComponent {
 
       
       render() {
+        // console.log(this.props.id, " key")
         const dragHandlers = {onStart: this.onStart, onStop: this.onStop};
-        console.log(this.state.activeDrags, " active drag")
         return (
           <Draggable 
             handle="strong" {...dragHandlers} 
             onDrag={this.handleDrag}
           >
                <ResizableBox
+                 style={{ backgroundColor: "red", zIndex: this.props.zIndex }}
                 className="custom-box box"
                 width={this.props.width}
-                height={this.props.width}
+                height={this.props.height}
                 handle={<span className="custom-handle custom-handle-se" />}
                 handleSize={[10, 10]}>
                 <div className="box" style={{ zIndex: this.props.zIndex }}>
