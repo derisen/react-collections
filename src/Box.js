@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
 import { Resizable, ResizableBox } from 'react-resizable';
 import Draggable from 'react-draggable';
-import { createSelectable } from 'react-selectable-fast'
+
+// import { createSelectable } from 'react-selectable-fast'
 
 class Box extends PureComponent {
 
@@ -41,6 +42,7 @@ class Box extends PureComponent {
       };
     
       onStart = () => {
+
         this.setState({activeDrags: ++this.state.activeDrags});
       };
     
@@ -51,20 +53,25 @@ class Box extends PureComponent {
       
       render() {
         const dragHandlers = {onStart: this.onStart, onStop: this.onStop};
-    
+        console.log(this.state.activeDrags, " active drag")
         return (
-          <Draggable handle="strong" {...dragHandlers} ref={this.props.selectableRef}>
-              <ResizableBox
+          <Draggable 
+            handle="strong" {...dragHandlers} 
+            onDrag={this.handleDrag}
+          >
+               <ResizableBox
                 className="custom-box box"
-                width={200}
-                height={200}
+                width={this.props.width}
+                height={this.props.width}
                 handle={<span className="custom-handle custom-handle-se" />}
-                handleSize={[8, 8]}>
-              <div className="box no-cursor">
-                <strong className="cursor"><div>Drag here</div></strong>
-                <div>You must click my handle to drag me</div>
-              </div>
-              </ResizableBox>
+                handleSize={[10, 10]}>
+                <div className="box" style={{ zIndex: this.props.zIndex }}>
+                  <strong className="cursor"><div>Drag here</div></strong>
+                  <div>{this.props.title}</div>
+                  <div>{this.state.deltaPosition.x.toFixed()}, y: {this.state.deltaPosition.y.toFixed()}</div>
+                </div>
+              </ResizableBox> 
+           
             </Draggable>
         );
       }

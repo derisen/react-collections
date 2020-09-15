@@ -1,6 +1,6 @@
 .layoutRoot {
   display: flex;
-  background: #eee;
+  background: rgb(192, 184, 184);
   margin-bottom: 20px;
   flex-wrap: wrap;
 }
@@ -31,6 +31,8 @@
   overflow: hidden;
   position: relative;
   margin: 20px;
+  width: 200px;
+  height: 200px;
 }
 .box .text {
   text-align: center;
@@ -112,4 +114,12 @@
 }
 .custom-handle-s {
   bottom: -4px;
+}
+.App {
+  display: flex;
+  flex-direction: row;
+  /* height:100%; */
+  overflow: scroll;
+  /* width: 100%; */
+
 }
