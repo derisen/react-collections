@@ -18,9 +18,42 @@ class Box extends PureComponent {
           x: 0, y: 0
         },
         controlledPosition: {
-          x: -400, y: 200
+          x: 0, y: 0
         }
       };
+
+  // componentWillMount() {
+  //   localStorage.removeItem('deltaPosition')
+  //   const deltaPosition = JSON.parse(localStorage.getItem('deltaPosition'));
+  //   console.log(deltaPosition)
+  //   if (deltaPosition !== null)
+  //   {
+  
+
+  //     this.setState({
+  //       deltaPosition: deltaPosition,
+  //     })
+  //   }
+  //   else
+  //   {
+  //     let newDelta = { 
+  //       x: this.props.positionX,
+  //       y: this.props.positionY
+  //     }
+
+  //     this.setState({
+  //       deltaPosition: newDelta
+  //     });
+
+  //   }
+  // }
+  // componentDidUpdate(prevProps, prevState, snapshot) {
+
+  //   if (prevState.deltaPosition !== this.state.deltaPosition) {
+  //     localStorage.setItem('deltaPosition', JSON.stringify(this.state.deltaPosition));
+  //   }
+  // }
+
     
       onResetClick = () => {
         this.setState({ width: 200, height: 200, absoluteWidth: 200, absoluteHeight: 200 });
@@ -35,8 +68,8 @@ class Box extends PureComponent {
         const {x, y} = this.state.deltaPosition;
         this.setState({
           deltaPosition: {
-            x: x + ui.deltaX,
-            y: y + ui.deltaY,
+            x: ui.x,
+            y: ui.y,
           }
         });
       };
@@ -47,21 +80,32 @@ class Box extends PureComponent {
           zIndex: this.props.zIndex
         }
         this.props.editZindex(object);
+        
         this.setState({activeDrags: ++this.state.activeDrags});
       };
     
       onStop = () => {
+        let object = {
+          ...this.state.deltaPosition,
+          id: this.props.id
+        }
+        this.props.setNewPosition(object)
         this.setState({activeDrags: --this.state.activeDrags});
+        
       };
 
       
       render() {
-        // console.log(this.props.id, " key")
-        const dragHandlers = {onStart: this.onStart, onStop: this.onStop};
+        // const dragHandlers = {onStart: this.onStart, onStop: this.onStop};
+        console.log(this.props.positionX, " XXXX")
+        console.log(this.props.positionY, "YYY")
         return (
           <Draggable 
-            handle="strong" {...dragHandlers} 
+            handle="strong"
+            onStart={this.onStart} 
+            onStop={this.onStop}
             onDrag={this.handleDrag}
+            defaultPosition={{ x: this.props.positionX, y: this.props.positionY}}
           >
                <ResizableBox
                  style={{ backgroundColor: "red", zIndex: this.props.zIndex }}

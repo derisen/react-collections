@@ -3,11 +3,32 @@ import  './App.css';
 import Box from './Box';
 
 class App extends Component {
+
+  componentWillMount() {
+    // localStorage.removeItem('boxes');
+    const boxes = JSON.parse(localStorage.getItem('boxes'));
+
+    if (boxes !== null) {
+      this.setState({
+        boxes: boxes,
+      })
+    }
+
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+
+    if (prevState.boxes !== this.state.boxes) {
+      localStorage.setItem('boxes', JSON.stringify(this.state.boxes));
+    }
+
+  }
+
   state = {
     boxes: [
-      { key: 'a', title: "box one", zIndex: 3},
-      { key: 'b', title: "box two", zIndex: 2 },
-      { key: 'c', title: "box three", zIndex: 1}
+      { key: 'a', title: "box one", zIndex: 3, x: 0, y: 0},
+      { key: 'b', title: "box two", zIndex: 2, x: 281, y: 0 },
+      { key: 'c', title: "box three", zIndex: 1, x: 0, y: 0}
     ],
     showClicked: false,
     width:  300,
@@ -18,7 +39,6 @@ class App extends Component {
     // console.log(object, "key")
     let boxes = [...this.state.boxes]
     // console.log(boxes, " boxes")
-    console.log(boxes, ".////////////////////////")
     const maxZindex = Math.max.apply(Math, boxes.map(function (box) { return box.zIndex; }))
     let clickedItem = boxes.find((box) => box.key === object.id );
     // let objectWithMaxZindex = boxes.find((box) => box.zIndex === maxZindex);
@@ -26,12 +46,25 @@ class App extends Component {
     // console.log(objectWithMaxZindex)
     // objectWithMaxZindex.zIndex = object.zIndex;
     clickedItem.zIndex = maxZindex + 1;
-    console.log(boxes, ".////////////////////////")
     this.setState({
       boxes: boxes
     })
 
     
+    
+
+  }
+
+
+  setNewPosition = (object) => {
+    let boxes = [...this.state.boxes]
+    let clickedItem = boxes.find((box) => box.key === object.id);
+    console.log(object)
+    clickedItem.x = object.x
+    clickedItem.y = object.y
+    this.setState({
+      boxes: boxes
+    })
 
   }
 
@@ -46,6 +79,9 @@ class App extends Component {
                 width={this.state.width}
                 height={this.state.height}
                 editZindex={this.editZindex.bind(this)}
+                positionX={box.x}
+                positionY={box.y}
+                setNewPosition={this.setNewPosition.bind(this)}
               />
     })
   )
@@ -78,6 +114,7 @@ class App extends Component {
   
 
   render() {
+    console.log(this.state.boxes)
     return (
       <div 
         className={"App"} style={{ width: window.outerWidth, height: window.outerHeight}}
