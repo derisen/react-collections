@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import { Resizable, ResizableBox } from 'react-resizable';
 import Draggable from 'react-draggable';
 
-// import { createSelectable } from 'react-selectable-fast'
 
 class Box extends PureComponent {
 
@@ -21,38 +20,6 @@ class Box extends PureComponent {
           x: 0, y: 0
         }
       };
-
-  // componentWillMount() {
-  //   localStorage.removeItem('deltaPosition')
-  //   const deltaPosition = JSON.parse(localStorage.getItem('deltaPosition'));
-  //   console.log(deltaPosition)
-  //   if (deltaPosition !== null)
-  //   {
-  
-
-  //     this.setState({
-  //       deltaPosition: deltaPosition,
-  //     })
-  //   }
-  //   else
-  //   {
-  //     let newDelta = { 
-  //       x: this.props.positionX,
-  //       y: this.props.positionY
-  //     }
-
-  //     this.setState({
-  //       deltaPosition: newDelta
-  //     });
-
-  //   }
-  // }
-  // componentDidUpdate(prevProps, prevState, snapshot) {
-
-  //   if (prevState.deltaPosition !== this.state.deltaPosition) {
-  //     localStorage.setItem('deltaPosition', JSON.stringify(this.state.deltaPosition));
-  //   }
-  // }
 
     
       onResetClick = () => {
@@ -96,9 +63,6 @@ class Box extends PureComponent {
 
       
       render() {
-        // const dragHandlers = {onStart: this.onStart, onStop: this.onStop};
-        console.log(this.props.positionX, " XXXX")
-        console.log(this.props.positionY, "YYY")
         return (
           <Draggable 
             handle="strong"

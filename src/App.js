@@ -4,8 +4,19 @@ import Box from './Box';
 
 class App extends Component {
 
+  state = {
+    boxes: [
+      { key: 'a', title: "box one", zIndex: 3, x: 0, y: 0 },
+      { key: 'b', title: "box two", zIndex: 2, x: 281, y: 0 },
+      { key: 'c', title: "box three", zIndex: 1, x: 0, y: 0 }
+    ],
+    showClicked: false,
+    width: 300,
+    height: 300,
+  }
+
+
   componentWillMount() {
-    // localStorage.removeItem('boxes');
     const boxes = JSON.parse(localStorage.getItem('boxes'));
 
     if (boxes !== null) {
@@ -24,27 +35,11 @@ class App extends Component {
 
   }
 
-  state = {
-    boxes: [
-      { key: 'a', title: "box one", zIndex: 3, x: 0, y: 0},
-      { key: 'b', title: "box two", zIndex: 2, x: 281, y: 0 },
-      { key: 'c', title: "box three", zIndex: 1, x: 0, y: 0}
-    ],
-    showClicked: false,
-    width:  300,
-    height: 300,
-  }
-
+  
   editZindex =  (object) => {
-    // console.log(object, "key")
     let boxes = [...this.state.boxes]
-    // console.log(boxes, " boxes")
     const maxZindex = Math.max.apply(Math, boxes.map(function (box) { return box.zIndex; }))
     let clickedItem = boxes.find((box) => box.key === object.id );
-    // let objectWithMaxZindex = boxes.find((box) => box.zIndex === maxZindex);
-    // console.log(maxZindex);
-    // console.log(objectWithMaxZindex)
-    // objectWithMaxZindex.zIndex = object.zIndex;
     clickedItem.zIndex = maxZindex + 1;
     this.setState({
       boxes: boxes
@@ -101,7 +96,7 @@ class App extends Component {
 
     }
     if(e.keyCode === 90 ) {
-      console.log(" you pressed Z")
+      console.log("you pressed Z")
       this.setState({ width: 500, height: 500})
     }
 
