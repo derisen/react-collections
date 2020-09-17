@@ -1,24 +1,27 @@
 import React, { Component} from 'react';
 import  './App.css';
 import Box from './Box';
+import Selecto from "react-selecto";
+
 
 class App extends Component {
 
   state = {
     boxes: [
       { key: 'a', title: "box one", zIndex: 3, x: 0, y: 0 },
-      { key: 'b', title: "box two", zIndex: 2, x: 281, y: 0 },
-      { key: 'c', title: "box three", zIndex: 1, x: 0, y: 0 }
+      { key: 'b', title: "box two", zIndex: 2, x: 0, y: 0 },
+      { key: 'c', title: "box three", zIndex: 1, x: 0, y: 0 },
     ],
     showClicked: false,
     width: 300,
     height: 300,
+    showSelector: true,
   }
 
 
   componentWillMount() {
+    // localStorage.removeItem("boxes");
     const boxes = JSON.parse(localStorage.getItem('boxes'));
-
     if (boxes !== null) {
       this.setState({
         boxes: boxes,
@@ -42,7 +45,8 @@ class App extends Component {
     let clickedItem = boxes.find((box) => box.key === object.id );
     clickedItem.zIndex = maxZindex + 1;
     this.setState({
-      boxes: boxes
+      boxes: boxes,
+      showSelector: false
     })
 
     
@@ -82,9 +86,19 @@ class App extends Component {
   )
 
   handleClicked = () => {
-    this.setState({
-      showClicked: !this.state.showClicked
-    })
+    if(this.state.showSelector){
+      this.setState({
+        showClicked: !this.state.showClicked
+      })
+    }
+    else
+    {
+      this.setState({ 
+        showSelector: true,
+        showClicked: !this.state.showClicked
+      });
+    }
+    
   }
 
   handleKeyEvents = (e) => {
@@ -109,7 +123,6 @@ class App extends Component {
   
 
   render() {
-    console.log(this.state.boxes)
     return (
       <div 
         className={"App"} style={{ width: window.outerWidth, height: window.outerHeight}}
@@ -117,12 +130,49 @@ class App extends Component {
         onKeyDown={this.handleKeyEvents}
         tabIndex="0"
       >
-        {this.renderBoxes(this.state.boxes)}
-        {this.state.showClicked ?
-          <p onClick={this.handleClicked} style={{fontSize: 40}}>clicked</p>
-          :
-          null
-      }
+       
+          {this.renderBoxes(this.state.boxes)}
+            {this.state.showClicked ?
+              <p onClick={this.handleClicked} style={{fontSize: 40}}>clicked</p>
+              :
+              null
+          }
+          {
+            this.state.showSelector ? 
+            <Selecto
+              container={document.body}
+              dragContainer={window}
+              selectableTargets={[".target", document.querySelector(".target2")]}
+              selectByClick={true}
+              selectFromInside={true}
+              continueSelect={false}
+              toggleContinueSelect={"shift"}
+              keyContainer={window}
+              hitRate={100}
+              onSelectStart={e => {
+                console.log("start", e);
+                e.added.forEach(el => {
+                  el.classList.add("selected");
+                });
+                e.removed.forEach(el => {
+                  el.classList.remove("selected");
+                });
+              }}
+              onSelectEnd={e => {
+                console.log("end", e);
+                e.afterAdded.forEach(el => {
+                  console.log(el, "elment")
+                  el.classList.add("selected");
+                });
+                e.afterRemoved.forEach(el => {
+                  el.classList.remove("selected");
+                });
+              }}
+            />
+            :
+            null
+          }
+          
       </div>
     );
   }

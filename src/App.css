@@ -123,3 +123,7 @@
   /* width: 100%; */
 
 }
+
+.selected {
+  background-color: #1153aa;
+}

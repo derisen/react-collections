@@ -47,7 +47,6 @@ class Box extends PureComponent {
           zIndex: this.props.zIndex
         }
         this.props.editZindex(object);
-        
         this.setState({activeDrags: ++this.state.activeDrags});
       };
     
@@ -72,8 +71,8 @@ class Box extends PureComponent {
             defaultPosition={{ x: this.props.positionX, y: this.props.positionY}}
           >
                <ResizableBox
-                 style={{ backgroundColor: "red", zIndex: this.props.zIndex }}
-                className="custom-box box"
+                 style={{ zIndex: this.props.zIndex }}
+                className="custom-box box target"
                 width={this.props.width}
                 height={this.props.height}
                 handle={<span className="custom-handle custom-handle-se" />}
