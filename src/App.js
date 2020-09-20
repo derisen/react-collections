@@ -8,9 +8,9 @@ class App extends Component {
 
   state = {
     boxes: [
-      { key: 'a', title: "box one", zIndex: 3, x: 0, y: 0 },
-      { key: 'b', title: "box two", zIndex: 2, x: 0, y: 0 },
-      { key: 'c', title: "box three", zIndex: 1, x: 0, y: 0 },
+      { key: 'a', title: "box one", zIndex: 3, x: 0, y: 0, width: 300, height: 300, selected: false },
+      { key: 'b', title: "box two", zIndex: 2, x: 0, y: 0, width: 300, height: 300, selected: false},
+      { key: 'c', title: "box three", zIndex: 1, x: 0, y: 0, width: 300, height: 300, selected: false },
     ],
     showClicked: false,
     width: 300,
@@ -58,13 +58,29 @@ class App extends Component {
   setNewPosition = (object) => {
     let boxes = [...this.state.boxes]
     let clickedItem = boxes.find((box) => box.key === object.id);
-    console.log(object)
     clickedItem.x = object.x
     clickedItem.y = object.y
     this.setState({
       boxes: boxes
     })
 
+  }
+
+  resizeStart = () => {
+    this.setState({
+      showSelector: false
+    })
+  }
+
+  adjustResize = (object) => {
+    let boxes = [...this.state.boxes];
+    let dragedItem = boxes.find((box) => box.key === object.id);
+  
+    dragedItem.width  = object.width
+    dragedItem.height = object.height
+    this.setState({
+      boxes: boxes
+    });
   }
 
 
@@ -75,12 +91,14 @@ class App extends Component {
                 id={box.key}
                 title={box.title}
                 zIndex={box.zIndex}
-                width={this.state.width}
-                height={this.state.height}
+                width={box.width}
+                height={box.height}
                 editZindex={this.editZindex.bind(this)}
                 positionX={box.x}
                 positionY={box.y}
                 setNewPosition={this.setNewPosition.bind(this)}
+                resizeStart={this.resizeStart}
+               adjustResize={this.adjustResize.bind(this)}
               />
     })
   )
@@ -120,6 +138,62 @@ class App extends Component {
     }
   }
 
+
+  handelSelectStart = (e) => {
+    e.added.forEach(el => {
+      el.classList.add("selected");
+    });
+    e.removed.forEach(el => {
+      el.classList.remove("selected");
+    });
+  }
+
+
+  handelSelectEnd = (e) => {
+    console.log("select end")
+    if(e.afterAdded.length)
+    {
+      e.afterAdded.forEach(el => {
+        el.classList.add("selected");
+        let boxes = [...this.state.boxes];
+        let dragedItem = boxes.find((box) => box.key === el.id);
+        console.log(dragedItem)
+        if (dragedItem) {
+          dragedItem.selected = true;
+          this.setState({
+            boxes: boxes
+          });
+        }
+        else {
+          console.log("in no item")
+        }
+      });
+      e.afterRemoved.forEach(el => {
+        console.log("in remove")
+        el.classList.remove("selected");
+      });
+    }
+    else
+    {
+      let boxes = [...this.state.boxes];
+      let isAllFalse = true 
+      for(let i = 0; boxes.length > i; i++)
+      {
+        if(boxes[i].selected)
+        {
+          isAllFalse = false;
+          boxes[i].selected = false;
+        }      
+      }
+      if (!isAllFalse){
+        this.setState({
+          boxes: boxes
+        })
+      }
+      
+    }
+  }
+
   
 
   render() {
@@ -132,11 +206,6 @@ class App extends Component {
       >
        
           {this.renderBoxes(this.state.boxes)}
-            {this.state.showClicked ?
-              <p onClick={this.handleClicked} style={{fontSize: 40}}>clicked</p>
-              :
-              null
-          }
           {
             this.state.showSelector ? 
             <Selecto
@@ -149,25 +218,8 @@ class App extends Component {
               toggleContinueSelect={"shift"}
               keyContainer={window}
               hitRate={100}
-              onSelectStart={e => {
-                console.log("start", e);
-                e.added.forEach(el => {
-                  el.classList.add("selected");
-                });
-                e.removed.forEach(el => {
-                  el.classList.remove("selected");
-                });
-              }}
-              onSelectEnd={e => {
-                console.log("end", e);
-                e.afterAdded.forEach(el => {
-                  console.log(el, "elment")
-                  el.classList.add("selected");
-                });
-                e.afterRemoved.forEach(el => {
-                  el.classList.remove("selected");
-                });
-              }}
+              onSelectStart={this.handelSelectStart}
+              onSelectEnd={this.handelSelectEnd}
             />
             :
             null

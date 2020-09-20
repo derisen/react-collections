@@ -27,9 +27,7 @@ class Box extends PureComponent {
       };
     
       // On top layout
-      onResize = (event, {element, size, handle}) => {
-        this.setState({width: size.width, height: size.height});
-      };
+
     
       handleDrag = (e, ui) => {
         const {x, y} = this.state.deltaPosition;
@@ -38,6 +36,7 @@ class Box extends PureComponent {
             x: ui.x,
             y: ui.y,
           }
+
         });
       };
     
@@ -60,9 +59,22 @@ class Box extends PureComponent {
         
       };
 
+      handleResizeStart = (e) => {
+        this.props.resizeStart()
+      }
+
+  resizeStartStop = (e, data) => {
+    let object = {
+      id: this.props.id,
+      ...data.size,
+    }
+    this.props.adjustResize(object)
+  }
+
       
       render() {
         return (
+          <div>
           <Draggable 
             handle="strong"
             onStart={this.onStart} 
@@ -70,21 +82,29 @@ class Box extends PureComponent {
             onDrag={this.handleDrag}
             defaultPosition={{ x: this.props.positionX, y: this.props.positionY}}
           >
-               <ResizableBox
-                 style={{ zIndex: this.props.zIndex }}
-                className="custom-box box target"
-                width={this.props.width}
-                height={this.props.height}
-                handle={<span className="custom-handle custom-handle-se" />}
-                handleSize={[10, 10]}>
-                <div className="box" style={{ zIndex: this.props.zIndex }}>
-                  <strong className="cursor"><div>Drag here</div></strong>
-                  <div>{this.props.title}</div>
-                  <div>{this.state.deltaPosition.x.toFixed()}, y: {this.state.deltaPosition.y.toFixed()}</div>
-                </div>
-              </ResizableBox> 
-           
-            </Draggable>
+        
+            <ResizableBox
+              style={{ zIndex: this.props.zIndex, minHeight: 300, minWidth: 300 }}
+              id={this.props.id}
+              onResizeStart={this.handleResizeStart}
+              onResizeStop={this.resizeStartStop}
+              className="custom-box box target"
+              width={this.props.width}
+              height={this.props.height}
+              handle={<span className="custom-handle custom-handle-se" />}
+              // maxConstraints={[1400, 1400]}
+              minConstraints={[100, 100]} 
+              maxConstraints={[1500, 1500]}
+              handleSize={[10, 10]}
+            >
+              <div className="box" style={{ zIndex: this.props.zIndex }}>
+                <strong className="cursor"><div>Drag here</div></strong>
+                <div>{this.props.title}</div>
+                <div>{this.state.deltaPosition.x.toFixed()}, y: {this.state.deltaPosition.y.toFixed()}</div>
+              </div>
+            </ResizableBox>                
+          </Draggable> 
+          </div>
         );
       }
 }
