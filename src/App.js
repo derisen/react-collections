@@ -124,17 +124,39 @@ class App extends Component {
     if (e.keyCode === 88)
     {
       console.log(" you pressed X")
-      this.setState({ width: 300, height: 300 })
-
+      let copy = [...this.state.boxes];
+      for (let i = 0; copy.length > i; i++)
+      {
+        copy[i].width = 300;
+        copy[i].height = 300;
+      }
+      this.setState({
+        boxes: copy
+      })
     }
     if(e.keyCode === 90 ) {
       console.log("you pressed Z")
-      this.setState({ width: 500, height: 500})
+      let copy = [...this.state.boxes];
+      for (let i = 0; copy.length > i; i++) {
+        copy[i].width = 500;
+        copy[i].height = 500;
+      }
+      this.setState({
+        boxes: copy
+      })
     }
 
     if (e.keyCode === 83){
-      console.log(" you pressed S")
       this.setState({ width: 200, height: 200 })
+
+      let copy = [...this.state.boxes];
+      for (let i = 0; copy.length > i; i++) {
+        copy[i].width = 200;
+        copy[i].height = 200;
+      }
+      this.setState({
+        boxes: copy
+      })
     }
   }
 

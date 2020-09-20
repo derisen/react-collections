@@ -84,7 +84,7 @@ class Box extends PureComponent {
           >
         
             <ResizableBox
-              style={{ zIndex: this.props.zIndex, minHeight: 300, minWidth: 300 }}
+              style={{ zIndex: this.props.zIndex }}
               id={this.props.id}
               onResizeStart={this.handleResizeStart}
               onResizeStop={this.resizeStartStop}
@@ -93,7 +93,6 @@ class Box extends PureComponent {
               height={this.props.height}
               handle={<span className="custom-handle custom-handle-se" />}
               // maxConstraints={[1400, 1400]}
-              minConstraints={[100, 100]} 
               maxConstraints={[1500, 1500]}
               handleSize={[10, 10]}
             >
